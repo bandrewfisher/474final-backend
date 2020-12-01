@@ -1,0 +1,4 @@
+venv
+__pycache__
+train_accuracy.pickle
+train_loss.pickle
