@@ -46,7 +46,7 @@ class CharacterRecognition(nn.Module):
             nn.Linear(1024, 1024),
             nn.LeakyReLU(),
             nn.Dropout(p=0.25),
-            nn.Linear(1024, 300),
+            nn.Linear(1024, 600),
             nn.LeakyReLU()
         )
 
@@ -57,10 +57,10 @@ class CharacterRecognition(nn.Module):
 
 model = CharacterRecognition()
 model.load_state_dict(torch.load(
-    'model9.pickle', map_location=torch.device('cpu')))
+    'model9_600.pickle', map_location=torch.device('cpu')))
 model.eval()
 
-char_classes = pickle.load(open('train_classes.pickle', 'rb'))
+char_classes = pickle.load(open('char_classes.pickle', 'rb'))
 
 
 @app.route('/recognize', methods=['POST'])
@@ -78,6 +78,8 @@ def recognize():
     guess_classes = torch.softmax(classes, 1).squeeze(
         0).topk(10).indices.tolist()
 
+    # print(guess_classes)
+    # print([char_classes[c] for c in guess_classes])
     return json.dumps([char_classes[c] for c in guess_classes])
 
 
